@@ -1,12 +1,14 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <title>Login ke My PBI Dashboard</title>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth-compat.js"></script>
+
+  <!-- Muat Firebase compat SDK lengkap -->
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-compat.js"></script>
+
   <script>
+    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
       authDomain: "my-pbi-dashboard.firebaseapp.com",
@@ -17,6 +19,7 @@
       measurementId: "G-263J3ZLSJJ"
     };
 
+    // Inisialisasi Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
