@@ -3,12 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Login ke My PBI Dashboard</title>
+</head>
+<body style="text-align:center; font-family:sans-serif;">
+  <h1>Login</h1>
+  <div>
+    <input id="email" type="email" placeholder="Email" style="width:250px;" /><br><br>
+    <input id="pass" type="password" placeholder="Password" style="width:250px;" /><br><br>
+    <button id="btn">Login</button>
+  </div>
+  <div id="msg" style="color:red;"></div>
 
-  <!-- ✅ Firebase compat SDK (memuat semua fitur, termasuk auth) -->
+  <!-- ✅ Firebase compat SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-compat.js"></script>
 
+  <!-- ✅ Script login setelah Firebase dimuat -->
   <script>
-    // ✅ Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
       authDomain: "my-pbi-dashboard.firebaseapp.com",
@@ -19,11 +28,9 @@
       measurementId: "G-263J3ZLSJJ"
     };
 
-    // ✅ Inisialisasi Firebase dan Auth
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // ✅ Event listener DOM
     window.addEventListener("DOMContentLoaded", () => {
       const btn = document.getElementById("btn");
       btn.addEventListener("click", () => {
@@ -42,14 +49,5 @@
       });
     });
   </script>
-</head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Login</h1>
-  <div>
-    <input id="email" type="email" placeholder="Email" style="width:250px;" /><br><br>
-    <input id="pass" type="password" placeholder="Password" style="width:250px;" /><br><br>
-    <button id="btn">Login</button>
-  </div>
-  <div id="msg" style="color:red;"></div>
 </body>
 </html>
