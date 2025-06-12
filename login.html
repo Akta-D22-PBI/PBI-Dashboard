@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <title>Login ke My PBI Dashboard</title>
@@ -11,45 +11,44 @@
     <input id="pass" type="password" placeholder="Password" style="width:250px;" /><br><br>
     <button id="btn">Login</button>
   </div>
-  <div id="msg" style="color:red;"></div>
+  <div id="msg" style="color:red; margin-top:20px;"></div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth-compat.js"></script>
+  <!-- ✅ Script Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-  <script>
-    window.onload = function() {
-      if (typeof firebase === "undefined") {
-        console.error("Firebase belum ter-load!");
-        return;
-      }
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
+      authDomain: "my-pbi-dashboard.firebaseapp.com",
+      projectId: "my-pbi-dashboard",
+      storageBucket: "my-pbi-dashboard.appspot.com",
+      messagingSenderId: "776252651257",
+      appId: "1:776252651257:web:757618a489ed6123d95428",
+      measurementId: "G-263J3ZLSJJ"
+    };
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
-        authDomain: "my-pbi-dashboard.firebaseapp.com",
-        projectId: "my-pbi-dashboard",
-        storageBucket: "my-pbi-dashboard.appspot.com",
-        messagingSenderId: "776252651257",
-        appId: "1:776252651257:web:757618a489ed6123d95428",
-        measurementId: "G-263J3ZLSJJ"
-      };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-
-      document.getElementById("btn").addEventListener("click", function() {
+    // Event listener setelah DOM siap
+    window.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("btn");
+      btn.addEventListener("click", () => {
         const email = document.getElementById("email").value;
         const pass = document.getElementById("pass").value;
 
-        auth.signInWithEmailAndPassword(email, pass)
+        signInWithEmailAndPassword(auth, email, pass)
           .then(() => {
+            console.log("Login berhasil");
             window.location = "index.html";
           })
-          .catch(err => {
+          .catch((err) => {
+            console.error("Login gagal:", err.message);
             document.getElementById("msg").textContent = err.message;
           });
       });
-    };
+    });
   </script>
 </body>
 </html>
