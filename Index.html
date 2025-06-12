@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My PBI Dashboard</title>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth-compat.js"></script>
+</head>
+<body style="text-align:center; font-family:sans-serif;">
+
+  <h1>My PBI Dashboard</h1>
+  <div id="loading">Memeriksa autentikasi...</div>
+  <div id="not-auth" style="display:none;">
+    <p>Anda belum login. Silakan <a href="login.html">login di sini</a>.</p>
+  </div>
+  <div id="dashboard" style="display:none;">
+    <iframe title="Artificial Intelligence Trial" width="800" height="600"
+      src="https://app.powerbi.com/view?r=eyJrIjoiNGEwOTU3ZjUtZmJjMS00MDI1LTk1Y2EtZDE3MWFkNWI2MTlmIiwidCI6ImJkYTRlZjc0LWYzMDMtNGNmZC1iZDYzLWMxMDFlZjEwZThiZSIsImMiOjEwfQ%3D%3D"
+      frameborder="0" allowFullScreen="true">
+    </iframe>
+    <p><button id="logout">Logout</button></p>
+  </div>
+
+  <script>
+    // TODO: Ganti dengan config Firebase-mu:
+    var firebaseConfig = { apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
+  authDomain: "my-pbi-dashboard.firebaseapp.com",
+  projectId: "my-pbi-dashboard",
+  storageBucket: "my-pbi-dashboard.firebasestorage.app",
+  messagingSenderId: "776252651257",
+  appId: "1:776252651257:web:757618a489ed6123d95428",
+  measurementId: "G-263J3ZLSJJ"
+ };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    auth.onAuthStateChanged(user => {
+      document.getElementById("loading").style.display = "none";
+      if (user && user.email === "gdr4server@gmail.com") {
+        document.getElementById("dashboard").style.display = "block";
+      } else {
+        document.getElementById("not-auth").style.display = "block";
+      }
+    });
+
+    document.getElementById("logout").onclick = () => {
+      auth.signOut().then(() => window.location.reload());
+    };
+  </script>
+</body>
+</html>
