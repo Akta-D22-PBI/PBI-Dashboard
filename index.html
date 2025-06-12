@@ -9,7 +9,17 @@
   <p id="userEmail">Memuat informasi pengguna...</p>
   <button id="logoutBtn">Logout</button>
 
-  <!-- Firebase Modular SDK -->
+  <!-- Embed Power BI report -->
+  <iframe
+    title="Artificial Intelligence Trial"
+    width="600"
+    height="373.5"
+    src="https://app.powerbi.com/view?r=eyJrIjoiNGEwOTU3ZjUtZmJjMS00MDI1LTk1Y2EtZDE3MWFkNWI2MTlmIiwidCI6ImJkYTRlZjc0LWYzMDMtNGNmZC1iZDYzLWMxMDFlZjEwZThiZSIsImMiOjEwfQ%3D%3D"
+    frameborder="0"
+    allowFullScreen="true"
+    style="margin-top:20px;"
+  ></iframe>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -27,16 +37,14 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Cek apakah user sudah login
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("userEmail").textContent = `Login sebagai: ${user.email}`;
       } else {
-        window.location = "login.html"; // redirect jika belum login
+        window.location = "login.html";
       }
     });
 
-    // Logout handler
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
         window.location = "login.html";
