@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Login ke My PBI Dashboard</title>
@@ -13,12 +13,17 @@
   </div>
   <div id="msg" style="color:red;"></div>
 
-  <!-- Firebase SDK yang benar -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth-compat.js"></script>
 
   <script>
-    window.onload = () => {
+    window.onload = function() {
+      if (typeof firebase === "undefined") {
+        console.error("Firebase belum ter-load!");
+        return;
+      }
+
       const firebaseConfig = {
         apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
         authDomain: "my-pbi-dashboard.firebaseapp.com",
@@ -32,7 +37,7 @@
       firebase.initializeApp(firebaseConfig);
       const auth = firebase.auth();
 
-      document.getElementById("btn").addEventListener("click", () => {
+      document.getElementById("btn").addEventListener("click", function() {
         const email = document.getElementById("email").value;
         const pass = document.getElementById("pass").value;
 
