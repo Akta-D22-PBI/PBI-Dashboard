@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <title>Login ke My PBI Dashboard</title>
 
-  <!-- Muat Firebase compat SDK lengkap -->
+  <!-- ✅ Firebase compat SDK (memuat semua fitur, termasuk auth) -->
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-compat.js"></script>
 
   <script>
-    // Konfigurasi Firebase
+    // ✅ Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
       authDomain: "my-pbi-dashboard.firebaseapp.com",
@@ -19,10 +19,11 @@
       measurementId: "G-263J3ZLSJJ"
     };
 
-    // Inisialisasi Firebase
+    // ✅ Inisialisasi Firebase dan Auth
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
+    // ✅ Event listener DOM
     window.addEventListener("DOMContentLoaded", () => {
       const btn = document.getElementById("btn");
       btn.addEventListener("click", () => {
