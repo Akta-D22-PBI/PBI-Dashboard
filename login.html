@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Login ke My PBI Dashboard</title>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth-compat.js"></script>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
   <h1>Login</h1>
@@ -14,8 +12,14 @@
     <button id="btn">Login</button>
   </div>
   <div id="msg" style="color:red;"></div>
+
+  <!-- Script Firebase HARUS di bawah body agar DOM sudah dimuat -->
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth-compat.js"></script>
+
   <script>
-    var firebaseConfig = {
+    // Konfigurasi Firebase kamu (dengan perbaikan storageBucket)
+    const firebaseConfig = {
       apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
       authDomain: "my-pbi-dashboard.firebaseapp.com",
       projectId: "my-pbi-dashboard",
@@ -24,6 +28,8 @@
       appId: "1:776252651257:web:757618a489ed6123d95428",
       measurementId: "G-263J3ZLSJJ"
     };
+
+    // Inisialisasi Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
@@ -31,8 +37,14 @@
       const email = document.getElementById("email").value;
       const pass = document.getElementById("pass").value;
       auth.signInWithEmailAndPassword(email, pass)
-        .then(() => window.location = "index.html")
-        .catch(err => document.getElementById("msg").textContent = err.message);
+        .then(() => {
+          console.log("Login berhasil");
+          window.location = "index.html";
+        })
+        .catch(err => {
+          console.error("Login gagal:", err.message);
+          document.getElementById("msg").textContent = err.message;
+        });
     };
   </script>
 </body>
