@@ -3,16 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <title>Sign Up - My PBI Dashboard</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-image: url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: sans-serif;
+      text-align: center;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    input {
+      width: 250px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #0078d4;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005ea1;
+    }
+
+    #msg {
+      margin-top: 20px;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    a {
+      color: #00aaff;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 15px;
+      display: inline-block;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:sans-serif;">
+<body>
   <h1>Sign Up</h1>
 
   <div>
-    <input type="email" id="email" placeholder="Email" style="width:250px;" /><br><br>
-    <input type="password" id="password" placeholder="Password" style="width:250px;" /><br><br>
+    <input type="email" id="email" placeholder="Email" /><br />
+    <input type="password" id="password" placeholder="Password" /><br />
     <button id="signupBtn">Daftar</button>
   </div>
-  <p id="msg" style="color:red;"></p>
+  <p id="msg"></p>
   <p><a href="login.html">Sudah punya akun? Login di sini</a></p>
 
   <script type="module">
@@ -32,7 +92,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // ✅ Daftar whitelist email yang diizinkan mendaftar
+    // Daftar whitelist email yang diizinkan mendaftar
     const whitelist = [
       "dedy@surganyamotor.co.id",
       "suryaadhi@surganyamotor.co.id",
@@ -46,24 +106,26 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
-      // ✅ Cek apakah email termasuk dalam whitelist
       if (!whitelist.includes(email)) {
-        document.getElementById("msg").textContent = "Email tidak diizinkan untuk mendaftar.";
+        const msg = document.getElementById("msg");
+        msg.style.color = "red";
+        msg.textContent = "Email tidak diizinkan untuk mendaftar.";
         return;
       }
 
-      // ✅ Proses registrasi ke Firebase
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
-          document.getElementById("msg").style.color = "green";
-          document.getElementById("msg").textContent = "Pendaftaran berhasil. Mengarahkan ke dashboard...";
+          const msg = document.getElementById("msg");
+          msg.style.color = "lightgreen";
+          msg.textContent = "Pendaftaran berhasil. Mengarahkan ke dashboard...";
           setTimeout(() => {
             window.location = "index.html";
           }, 2000);
         })
         .catch((error) => {
-          document.getElementById("msg").style.color = "red";
-          document.getElementById("msg").textContent = error.message;
+          const msg = document.getElementById("msg");
+          msg.style.color = "red";
+          msg.textContent = error.message;
         });
     });
   </script>
