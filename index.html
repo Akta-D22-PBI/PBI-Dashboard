@@ -3,8 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <title>My PBI Dashboard</title>
+  <style>
+    body {
+      background-image: url('background.jpg'); /* file gambar sejajar dengan index.html */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: sans-serif;
+      text-align: center;
+      color: white;
+    }
+
+    h1, p {
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    iframe {
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:sans-serif;">
+<body>
   <h1>Dashboard</h1>
   <p id="userEmail">Memuat informasi pengguna...</p>
   <button id="logoutBtn">Logout</button>
@@ -17,7 +44,6 @@
     src="https://app.powerbi.com/view?r=eyJrIjoiMmI0OGRkODQtZjY0MC00NDNmLWE0ZTMtMThhZGZhM2IyNzUxIiwidCI6ImJkYTRlZjc0LWYzMDMtNGNmZC1iZDYzLWMxMDFlZjEwZThiZSIsImMiOjEwfQ%3D%3D"
     frameborder="0"
     allowFullScreen="true"
-    style="margin-top:20px;"
   ></iframe>
 
   <script type="module">
