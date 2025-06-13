@@ -12,79 +12,94 @@
     html, body {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+      height: 100%;
       font-family: sans-serif;
       color: white;
       background: #000 url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg') no-repeat center center;
       background-size: cover;
     }
 
-    .content {
-      width: 100%;
-      min-height: 100vh;
-      padding: 20px 0;
-      background-color: rgba(0, 0, 0, 0.5); /* Transparan gelap untuk baca teks */
+    .wrapper {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      height: 100vh;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
     }
 
-    h1 {
-      font-size: 1.2rem;
-      margin: 0 0 10px;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    .header {
+      padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    p {
-      font-size: 0.9rem;
-      margin: 0 0 10px;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    .header h1 {
+      font-size: 1rem;
+      margin: 0;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .header p {
+      font-size: 0.6rem; /* Dikecilkan 50% dari sebelumnya */
+      margin: 5px 0;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
     }
 
     #logoutBtn {
-      font-size: 0.8rem;
-      padding: 6px 12px;
-      cursor: pointer;
-      background-color: #0078d4;
+      font-size: 0.7rem;
+      padding: 5px 10px;
+      margin-top: 5px;
       border: none;
-      border-radius: 5px;
+      background-color: #0078d4;
       color: white;
-      margin-bottom: 20px;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
     #logoutBtn:hover {
       background-color: #005ea1;
     }
 
+    .iframe-container {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
     iframe {
-      width: 95%;
-      max-width: 1000px;
-      height: 80vh;
+      width: 100%;
+      max-width: 1200px;
+      height: 100%;
       border: none;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
     }
 
     @media (max-width: 768px) {
       iframe {
-        height: 75vh;
+        height: 80vh;
       }
     }
   </style>
 </head>
 <body>
-  <div class="content">
-    <h1>Dashboard</h1>
-    <p id="userEmail">Memuat informasi pengguna...</p>
-    <button id="logoutBtn">Logout</button>
+  <div class="wrapper">
+    <div class="header">
+      <h1>Dashboard</h1>
+      <p id="userEmail">Memuat informasi pengguna...</p>
+      <button id="logoutBtn">Logout</button>
+    </div>
 
-    <!-- Embed Power BI report -->
-    <iframe
-      title="Business Intelligence"
-      src="https://app.powerbi.com/view?r=eyJrIjoiMmI0OGRkODQtZjY0MC00NDNmLWE0ZTMtMThhZGZhM2IyNzUxIiwidCI6ImJkYTRlZjc0LWYzMDMtNGNmZC1iZDYzLWMxMDFlZjEwZThiZSIsImMiOjEwfQ%3D%3D"
-      allowfullscreen
-    ></iframe>
+    <div class="iframe-container">
+      <iframe
+        title="Business Intelligence"
+        src="https://app.powerbi.com/view?r=eyJrIjoiMmI0OGRkODQtZjY0MC00NDNmLWE0ZTMtMThhZGZhM2IyNzUxIiwidCI6ImJkYTRlZjc0LWYzMDMtNGNmZC1iZDYzLWMxMDFlZjEwZThiZSIsImMiOjEwfQ%3D%3D"
+        allowfullscreen
+      ></iframe>
+    </div>
   </div>
 
   <script type="module">
