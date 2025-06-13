@@ -3,17 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <title>Login ke My PBI Dashboard</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-image: url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: sans-serif;
+      text-align: center;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    input {
+      width: 250px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #0078d4;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005ea1;
+    }
+
+    #msg {
+      color: #ff4444;
+      margin-top: 20px;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:sans-serif;">
+<body>
   <h1>Login</h1>
   <div>
-    <input id="email" type="email" placeholder="Email" style="width:250px;" /><br><br>
-    <input id="pass" type="password" placeholder="Password" style="width:250px;" /><br><br>
+    <input id="email" type="email" placeholder="Email" /><br />
+    <input id="pass" type="password" placeholder="Password" /><br />
     <button id="btn">Login</button>
   </div>
-  <div id="msg" style="color:red; margin-top:20px;"></div>
+  <div id="msg"></div>
 
-  <!-- ✅ Script Firebase Modular SDK -->
+  <!-- Script Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -31,7 +80,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Event listener setelah DOM siap
     window.addEventListener("DOMContentLoaded", () => {
       const btn = document.getElementById("btn");
       btn.addEventListener("click", () => {
