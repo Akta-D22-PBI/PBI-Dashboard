@@ -1,140 +1,61 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <title>Sign Up - My PBI Dashboard</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      /* Pastikan nama file gambar ini benar dan ada di folder 'public' */
-      background-image: url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg'); 
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      font-family: sans-serif;
-      text-align: center;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js";
 
-    input {
-      width: 250px;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
+  const firebaseConfig = {
+    apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
+    authDomain: "my-pbi-dashboard.firebaseapp.com",
+    projectId: "my-pbi-dashboard",
+    storageBucket: "my-pbi-dashboard.appspot.com",
+    messagingSenderId: "776252651257",
+    appId: "1:776252651257:web:757618a489ed6123d95428",
+    measurementId: "G-263J3ZLSJJ"
+  };
 
-    button {
-      padding: 10px 25px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-      border: none;
-      background-color: #0078d4;
-      color: white;
-      transition: background-color 0.3s ease;
-    }
+  const app = initializeApp(firebaseConfig);
+  const functions = getFunctions(app);
+  const signUpWithWhitelistFunction = httpsCallable(functions, 'signUpWithWhitelist');
 
-    button:hover {
-      background-color: #005ea1;
-    }
+  const msgElement = document.getElementById("msg");
 
-    #msg {
-      margin-top: 20px;
-      font-weight: bold;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    }
+  document.getElementById("signupBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const secretKey = document.getElementById("secretKey").value.trim();
 
-    a {
-      color: #00aaff;
-      text-decoration: none;
-      font-weight: 600;
-      margin-top: 15px;
-      display: inline-block;
-    }
+    // Tambahan DEBUG LOG
+    console.log("DEBUG - Email:", email);
+    console.log("DEBUG - Password:", password);
+    console.log("DEBUG - Secret Key:", secretKey);
 
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <h1>Sign Up</h1>
+    msgElement.style.color = "white";
+    msgElement.textContent = "Memproses pendaftaran...";
 
-  <div>
-    <input type="email" id="email" placeholder="Email" /><br />
-    <input type="password" id="password" placeholder="Password" /><br />
-    <input type="text" id="secretKey" placeholder="Kata Kunci" /><br /> 
-    <button id="signupBtn">Daftar</button>
-  </div>
-  <p id="msg"></p>
-  <p><a href="login.html">Sudah punya akun? Login di sini</a></p>
+    try {
+      const result = await signUpWithWhitelistFunction({
+        email: email,
+        password: password,
+        secretKey: secretKey
+      });
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js";
+      msgElement.style.color = "lightgreen";
+      msgElement.textContent = result.data.message;
+      setTimeout(() => {
+        window.location = "index.html";
+      }, 2000);
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
-      authDomain: "my-pbi-dashboard.firebaseapp.com",
-      projectId: "my-pbi-dashboard",
-      storageBucket: "my-pbi-dashboard.appspot.com",
-      messagingSenderId: "776252651257",
-      appId: "1:776252651257:web:757618a489ed6123d95428",
-      measurementId: "G-263J3ZLSJJ"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const functions = getFunctions(app);
-    const signUpWithWhitelistFunction = httpsCallable(functions, 'signUpWithWhitelist');
-
-    const msgElement = document.getElementById("msg");
-
-    document.getElementById("signupBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const secretKey = document.getElementById("secretKey").value.trim(); // Ambil nilai kata kunci
-
-      msgElement.style.color = "white";
-      msgElement.textContent = "Memproses pendaftaran...";
-
-      try {
-        // Kirim secretKey bersama email dan password ke Cloud Function
-        const result = await signUpWithWhitelistFunction({ 
-          email: email, 
-          password: password, 
-          secretKey: secretKey 
-        });
-
-        msgElement.style.color = "lightgreen";
-        msgElement.textContent = result.data.message;
-        setTimeout(() => {
-          window.location = "index.html";
-        }, 2000);
-
-      } catch (error) {
-        msgElement.style.color = "red";
-        // Tangani error dari Cloud Function
-        if (error.code === "permission-denied") {
-          // Pesan ini bisa dari email tidak di whitelist ATAU kata kunci tidak valid
-          msgElement.textContent = error.message; 
-        } else if (error.code === "invalid-argument") {
-          msgElement.textContent = error.message;
-        } else if (error.code === "already-exists") {
-          msgElement.textContent = error.message;
-        } else {
-          msgElement.textContent = `Terjadi kesalahan: ${error.message}`;
-        }
-        console.error("Error dari Cloud Function:", error);
+    } catch (error) {
+      msgElement.style.color = "red";
+      if (error.code === "permission-denied") {
+        msgElement.textContent = error.message;
+      } else if (error.code === "invalid-argument") {
+        msgElement.textContent = error.message;
+      } else if (error.code === "already-exists") {
+        msgElement.textContent = error.message;
+      } else {
+        msgElement.textContent = `Terjadi kesalahan: ${error.message}`;
       }
-    });
-  </script>
-</body>
-</html>
+      console.error("Error dari Cloud Function:", error);
+    }
+  });
+</script>
