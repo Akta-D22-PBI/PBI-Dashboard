@@ -97,19 +97,51 @@
     const msgElement = document.getElementById("msg");
 
     document.getElementById("signupBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const secretKey = document.getElementById("secretKey").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const secretKey = document.getElementById("secretKey").value.trim();
 
-      msgElement.style.color = "white";
-      msgElement.textContent = "Memproses pendaftaran...";
+  console.log("DEBUG - Email:", email);
+  console.log("DEBUG - Password:", password);
+  console.log("DEBUG - Secret Key:", secretKey);
 
-      try {
-        const result = await signUpWithWhitelistFunction({
-          email: email,
-          password: password,
-          secretKey: secretKey
-        });
+  msgElement.style.color = "white";
+  msgElement.textContent = "Memproses pendaftaran...";
+
+  // Tambahan validasi frontend agar tidak kosong
+  if (!email || !password || !secretKey) {
+    msgElement.style.color = "red";
+    msgElement.textContent = "Semua kolom harus diisi.";
+    return;
+  }
+
+  try {
+    const result = await signUpWithWhitelistFunction({
+      email: email,
+      password: password,
+      secretKey: secretKey
+    });
+
+    msgElement.style.color = "lightgreen";
+    msgElement.textContent = result.data.message;
+    setTimeout(() => {
+      window.location = "index.html";
+    }, 2000);
+
+  } catch (error) {
+    msgElement.style.color = "red";
+    if (error.code === "permission-denied") {
+      msgElement.textContent = error.message;
+    } else if (error.code === "invalid-argument") {
+      msgElement.textContent = error.message;
+    } else if (error.code === "already-exists") {
+      msgElement.textContent = error.message;
+    } else {
+      msgElement.textContent = `Terjadi kesalahan: ${error.message}`;
+    }
+    console.error("Error dari Cloud Function:", error);
+  }
+});
 
         msgElement.style.color = "lightgreen";
         msgElement.textContent = result.data.message;
