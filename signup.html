@@ -78,7 +78,6 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
@@ -90,9 +89,7 @@
       measurementId: "G-263J3ZLSJJ"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const functions = getFunctions(app, "us-central1");
-    const signUpWithWhitelistFunction = httpsCallable(functions, 'signUpWithWhitelist');
+    initializeApp(firebaseConfig);
 
     const msgElement = document.getElementById("msg");
 
@@ -100,10 +97,6 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const secretKey = document.getElementById("secretKey").value.trim();
-
-      console.log("DEBUG - Email:", email);
-      console.log("DEBUG - Password:", password);
-      console.log("DEBUG - Secret Key:", secretKey);
 
       msgElement.style.color = "white";
       msgElement.textContent = "Memproses pendaftaran...";
@@ -115,30 +108,28 @@
       }
 
       try {
-        const result = await signUpWithWhitelistFunction({
-          email: email,
-          password: password,
-          secretKey: secretKey
+        const response = await fetch("https://us-central1-my-pbi-dashboard.cloudfunctions.net/signUpWithWhitelist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, secretKey })
         });
 
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Pendaftaran gagal.");
+        }
+
         msgElement.style.color = "lightgreen";
-        msgElement.textContent = result.data.message;
+        msgElement.textContent = result.message;
         setTimeout(() => {
-          window.location = "index.html";
+          window.location = "login.html";
         }, 2000);
 
       } catch (error) {
         msgElement.style.color = "red";
-        if (error.code === "permission-denied") {
-          msgElement.textContent = error.message;
-        } else if (error.code === "invalid-argument") {
-          msgElement.textContent = error.message;
-        } else if (error.code === "already-exists") {
-          msgElement.textContent = error.message;
-        } else {
-          msgElement.textContent = `Terjadi kesalahan: ${error.message}`;
-        }
-        console.error("Error dari Cloud Function:", error);
+        msgElement.textContent = `Terjadi kesalahan: ${error.message}`;
+        console.error("❌ Error dari backend:", error);
       }
     });
   </script>
