@@ -1,133 +1,141 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>Sign Up - My PBI Dashboard</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background-image: url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      font-family: sans-serif;
-      text-align: center;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
+  <meta charset="UTF-8" />
+  <title>Sign Up - My PBI Dashboard</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-image: url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: sans-serif;
+      text-align: center;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
 
-    input {
-      width: 250px;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
+    input {
+      width: 250px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
 
-    button {
-      padding: 10px 25px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-      border: none;
-      background-color: #0078d4;
-      color: white;
-      transition: background-color 0.3s ease;
-    }
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #0078d4;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
 
-    button:hover {
-      background-color: #005ea1;
-    }
+    button:hover {
+      background-color: #005ea1;
+    }
 
-    #msg {
-      margin-top: 20px;
-      font-weight: bold;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    }
+    #msg {
+      margin-top: 20px;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
 
-    a {
-      color: #00aaff;
-      text-decoration: none;
-      font-weight: 600;
-      margin-top: 15px;
-      display: inline-block;
-    }
+    a {
+      color: #00aaff;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 15px;
+      display: inline-block;
+    }
 
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h1>Sign Up</h1>
+  <h1>Sign Up</h1>
 
-  <div>
-    <input type="email" id="email" placeholder="Email" /><br />
-    <input type="password" id="password" placeholder="Password" /><br />
-    <button id="signupBtn">Daftar</button>
-  </div>
-  <p id="msg"></p>
-  <p><a href="login.html">Sudah punya akun? Login di sini</a></p>
+  <div>
+    <input type="email" id="email" placeholder="Email" /><br />
+    <input type="password" id="password" placeholder="Password" /><br />
+    <button id="signupBtn">Daftar</button>
+  </div>
+  <p id="msg"></p>
+  <p><a href="login.html">Sudah punya akun? Login di sini</a></p>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    // Impor getFunctions dan httpsCallable
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
-      authDomain: "my-pbi-dashboard.firebaseapp.com",
-      projectId: "my-pbi-dashboard",
-      storageBucket: "my-pbi-dashboard.appspot.com",
-      messagingSenderId: "776252651257",
-      appId: "1:776252651257:web:757618a489ed6123d95428",
-      measurementId: "G-263J3ZLSJJ"
-    };
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHE1aJIkSGu-3X6uMCoFmw3Gah14dng58",
+      authDomain: "my-pbi-dashboard.firebaseapp.com",
+      projectId: "my-pbi-dashboard",
+      storageBucket: "my-pbi-dashboard.appspot.com",
+      messagingSenderId: "776252651257",
+      appId: "1:776252651257:web:757618a489ed6123d95428",
+      measurementId: "G-263J3ZLSJJ"
+    };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const functions = getFunctions(app); // Inisialisasi Firebase Functions SDK
+    // Dapatkan referensi ke Cloud Function Anda
+    const signUpWithWhitelistFunction = httpsCallable(functions, 'signUpWithWhitelist');
 
-    // Daftar whitelist email yang diizinkan mendaftar
-    const whitelist = [
-      "dedy@surganyamotor.co.id",
-      "suryaadhi@surganyamotor.co.id",
-      "imelda@surganyamotor.co.id",
-      "yoga.susanta@surganyamotor.co.id",
-      "samsuardi@surganyamotor.co.id",
-      "it.amel@surganyamotor.co.id"
-    ];
+    const msgElement = document.getElementById("msg"); // Simpan referensi ke elemen pesan
 
-    document.getElementById("signupBtn").addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+    document.getElementById("signupBtn").addEventListener("click", async () => { // Tambahkan 'async' di sini
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
 
-      if (!whitelist.includes(email)) {
-        const msg = document.getElementById("msg");
-        msg.style.color = "red";
-        msg.textContent = "Email tidak diizinkan untuk mendaftar.";
-        return;
-      }
+      // HAPUS BAGIAN WHITELIST INI DARI SINI
+      // const whitelist = [ ... ];
+      // if (!whitelist.includes(email)) { ... return; }
+      // GANTI DENGAN PEMANGGILAN CLOUD FUNCTION
 
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          const msg = document.getElementById("msg");
-          msg.style.color = "lightgreen";
-          msg.textContent = "Pendaftaran berhasil. Mengarahkan ke dashboard...";
-          setTimeout(() => {
-            window.location = "index.html";
-          }, 2000);
-        })
-        .catch((error) => {
-          const msg = document.getElementById("msg");
-          msg.style.color = "red";
-          msg.textContent = error.message;
-        });
-    });
-  </script>
+        msgElement.style.color = "white"; // Reset warna pesan
+        msgElement.textContent = "Memproses pendaftaran..."; // Beri feedback ke user
+
+      try {
+            // Panggil Cloud Function 'signUpWithWhitelist' Anda
+            const result = await signUpWithWhitelistFunction({ email: email, password: password });
+
+            // Jika Cloud Function berhasil (email ada di whitelist dan pengguna dibuat)
+            msgElement.style.color = "lightgreen";
+            msgElement.textContent = result.data.message; // Gunakan pesan dari Cloud Function
+            setTimeout(() => {
+                window.location = "index.html"; // Arahkan ke dashboard
+            }, 2000);
+
+      } catch (error) {
+          msgElement.style.color = "red";
+            // Tangani error dari Cloud Function
+            if (error.code === "permission-denied") {
+                msgElement.textContent = "Email Anda tidak diizinkan untuk mendaftar.";
+            } else if (error.code === "invalid-argument") {
+                // Untuk "Email dan password harus diisi." atau "Password terlalu lemah."
+                msgElement.textContent = error.message;
+            } else if (error.code === "already-exists") {
+                msgElement.textContent = error.message; // Untuk "Email ini sudah terdaftar..."
+            } else {
+                msgElement.textContent = `Terjadi kesalahan: ${error.message}`;
+            }
+          console.error("Error dari Cloud Function:", error);
+        });
+    });
+  </script>
 </body>
 </html>
