@@ -8,7 +8,6 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      /* Pastikan nama file gambar ini benar dan ada di folder 'public' */
       background-image: url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg'); 
       background-size: cover;
       background-position: center;
@@ -71,6 +70,7 @@
   <div>
     <input type="email" id="email" placeholder="Email" /><br />
     <input type="password" id="password" placeholder="Password" /><br />
+    <input type="text" id="secretKey" placeholder="Kata Kunci Rahasia" /><br /> 
     <button id="signupBtn">Daftar</button>
   </div>
   <p id="msg"></p>
@@ -99,12 +99,18 @@
     document.getElementById("signupBtn").addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
+      const secretKey = document.getElementById("secretKey").value.trim(); // Ambil nilai kata kunci
 
       msgElement.style.color = "white";
       msgElement.textContent = "Memproses pendaftaran...";
 
       try {
-        const result = await signUpWithWhitelistFunction({ email: email, password: password });
+        // Kirim secretKey bersama email dan password ke Cloud Function
+        const result = await signUpWithWhitelistFunction({ 
+          email: email, 
+          password: password, 
+          secretKey: secretKey 
+        });
 
         msgElement.style.color = "lightgreen";
         msgElement.textContent = result.data.message;
@@ -116,13 +122,13 @@
         msgElement.style.color = "red";
         // Tangani error dari Cloud Function
         if (error.code === "permission-denied") {
-          msgElement.textContent = "Email Anda tidak diizinkan untuk mendaftar.";
+          // Pesan ini bisa dari email tidak di whitelist ATAU kata kunci tidak valid
+          msgElement.textContent = error.message; 
         } else if (error.code === "invalid-argument") {
           msgElement.textContent = error.message;
         } else if (error.code === "already-exists") {
           msgElement.textContent = error.message;
         } else {
-          // Tangani error umum lainnya
           msgElement.textContent = `Terjadi kesalahan: ${error.message}`;
         }
         console.error("Error dari Cloud Function:", error);
