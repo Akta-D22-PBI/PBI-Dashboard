@@ -22,7 +22,7 @@
     .wrapper {
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
       width: 100%;
       background-color: rgba(0, 0, 0, 0.5);
     }
@@ -62,12 +62,10 @@
     }
 
     .iframe-container {
-      aspect-ratio: 16 / 9;
+      flex-grow: 1;
       width: 100%;
-      max-width: 1200px;
-      margin: auto;
       padding: 0;
-      flex-shrink: 0;
+      display: flex;
     }
 
     iframe {
@@ -78,24 +76,8 @@
       box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
     }
 
-    @supports not (aspect-ratio: 1 / 1) {
-      .iframe-container {
-        position: relative;
-        padding-top: 56.25%;
-        height: 0;
-      }
-
-      .iframe-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-      }
-    }
-
     @media (max-width: 768px) {
-      .iframe-container {
-        aspect-ratio: auto;
+      iframe {
         height: 80vh;
       }
     }
