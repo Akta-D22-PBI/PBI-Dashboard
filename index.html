@@ -4,57 +4,87 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My PBI Dashboard</title>
-
-  <!-- SDK Power BI -->
-  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2.21.0/dist/powerbi.min.js"></script>
-
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
-      height: 100%;
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: sans-serif;
+      color: white;
       background: #000 url('vecteezy_business-intelligence-and-big-data-analysis-technology.jpg') no-repeat center center;
       background-size: cover;
-      color: white;
     }
 
     .wrapper {
-      height: 100vh;
-      background-color: rgba(0,0,0,0.6);
       display: flex;
       flex-direction: column;
+      height: 100vh;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
     }
 
     .header {
       padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     .header h1 {
+      font-size: 1rem;
       margin: 0;
-      font-size: 1.2rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
     }
 
     .header p {
-      font-size: 0.8rem;
+      font-size: 0.6rem;
+      margin: 5px 0;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
     }
 
     #logoutBtn {
-      margin-top: 5px;
-      padding: 5px 10px;
       font-size: 0.8rem;
+      padding: 5px 10px;
+      margin-top: 5px;
+      border: none;
       background-color: #0078d4;
       color: white;
-      border: none;
       border-radius: 4px;
       cursor: pointer;
     }
 
-    #dashboardContainer {
+    #logoutBtn:hover {
+      background-color: #005ea1;
+    }
+
+    .iframe-container {
       flex-grow: 1;
-      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
       border-radius: 8px;
-      overflow: hidden;
-      background-color: white;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+      margin: 0;
+      background-color: transparent;
+    }
+
+    @media (max-width: 768px) {
+      iframe {
+        height: 80vh;
+      }
     }
   </style>
 </head>
@@ -62,11 +92,16 @@
   <div class="wrapper">
     <div class="header">
       <h1>Dashboard</h1>
-      <p id="userEmail">Memuat...</p>
+      <p id="userEmail">Memuat informasi pengguna...</p>
       <button id="logoutBtn">Logout</button>
     </div>
-    <div id="dashboardContainer">
-      <p id="dashboardLoading" style="padding:20px;">Memuat Power BI...</p>
+
+    <div class="iframe-container">
+      <iframe
+        title="Business Intelligence"
+        src="https://app.powerbi.com/view?r=eyJrIjoiMmI0OGRkODQtZjY0MC00NDNmLWE0ZTMtMThhZGZhM2IyNzUxIiwidCI6ImJkYTRlZjc0LWYzMDMtNGNmZC1iZDYzLWMxMDFlZjEwZThiZSIsImMiOjEwfQ%3D%3D"
+        allowfullscreen
+      ></iframe>
     </div>
   </div>
 
@@ -81,39 +116,15 @@
       storageBucket: "my-pbi-dashboard.appspot.com",
       messagingSenderId: "776252651257",
       appId: "1:776252651257:web:757618a489ed6123d95428",
+      measurementId: "G-263J3ZLSJJ"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("userEmail").textContent = `Login sebagai: ${user.email}`;
-
-        try {
-          const token = await user.getIdToken();
-
-          const res = await fetch("/getEmbedToken", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          const data = await res.json();
-
-          if (res.ok) {
-            embedPowerBI(data.embedUrl, data.embedToken);
-          } else {
-            document.getElementById("dashboardContainer").innerText = data.error || "Gagal memuat dashboard";
-            console.error("Cloud Function error:", data.error);
-          }
-        } catch (err) {
-          console.error("Error fetching embed token:", err);
-          document.getElementById("dashboardContainer").innerText = "Gagal memuat dashboard: " + err.message;
-        }
-
       } else {
         window.location = "login.html";
       }
@@ -122,40 +133,8 @@
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
         window.location = "login.html";
-      }).catch((error) => {
-        console.error("Logout error:", error);
-        alert("Gagal logout. Coba lagi.");
       });
     });
-
-    function embedPowerBI(embedUrl, token) {
-      if (typeof powerbi === "undefined" || typeof powerbi.models === "undefined") {
-        console.error("Power BI SDK tidak dimuat dengan benar.");
-        document.getElementById("dashboardContainer").innerText = "Power BI SDK tidak dimuat.";
-        return;
-      }
-
-      const models = powerbi.models;
-      const reportContainer = document.getElementById("dashboardContainer");
-      reportContainer.innerHTML = ""; // Kosongkan kontainer sebelumnya
-
-      const reportConfig = {
-        type: "report",
-        tokenType: models.TokenType.Embed,
-        accessToken: token,
-        embedUrl: embedUrl,
-        settings: {
-          panes: {
-            filters: { visible: false },
-            pageNavigation: { visible: false },
-          },
-          background: models.BackgroundType.Transparent,
-        },
-      };
-
-      powerbi.embed(reportContainer, reportConfig);
-      document.getElementById("dashboardLoading")?.remove(); // Hapus loading jika ada
-    }
   </script>
 </body>
 </html>
