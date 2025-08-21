@@ -136,6 +136,14 @@
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("userEmail").textContent = `Login sebagai: ${user.email}`;
+
+        // Kirimkan User ID ke Google Analytics
+        gtag('config', 'G-ZP0HFCSJ8G', {
+          'user_id': user.uid  // Kirimkan User ID Firebase ke Google Analytics
+        });
+    
+        console.log("User ID dikirim ke Google Analytics:", user.uid);
+
       } else {
         window.location = "login.html";
       }
@@ -149,4 +157,5 @@
   </script>
 </body>
 </html>
+
 
